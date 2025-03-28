@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alistamento Militar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"], input[type="radio"], select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Alistamento Militar</h1>
+    <form id="formAlistamento">
+        <div class="form-group">
+            <label for="dataNascimento">Digite seu ano de nascimento (AAAA-MM-DD):</label>
+            <input type="date" id="dataNascimento" name="dataNascimento" required>
+            <div id="errorNascimento" class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="nome">Digite seu nome completo:</label>
+            <input type="text" id="nome" name="nome" required>
+            <div id="errorNome" class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="altura">Digite sua altura (em metros ou centímetros):</label>
+            <input type="number" id="altura" name="altura" step="0.01" required>
+            <div id="errorAltura" class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="desejaServir">Você deseja servir ao Exército Brasileiro?</label><br>
+            <input type="radio" id="sim" name="desejaServir" value="sim">
+            <label for="sim">Sim</label>
+            <input type="radio" id="nao" name="desejaServir" value="nao">
+            <label for="nao">Não</label>
+            <div id="errorServir" class="error"></div>
+        </div>
+
+        <button type="submit">Confirmar Alistamento</button>
+    </form>
+
+    <div id="resultado" style="display: none;">
+        <h3>Resultado do Alistamento:</h3>
+        <p id="mensagemResultado"></p>
+    </div>
+</div>
+
+<script>
+    document.getElementById("formAlistamento").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        // Limpar mensagens de erro
+        document.getElementById("errorNascimento").innerText = '';
+        document.getElementById("errorNome").innerText = '';
+        document.getElementById("errorAltura").innerText = '';
+        document.getElementById("errorServir").innerText = '';
+        document.getElementById("resultado").style.display = 'none';
+
+        // Coletar dados do formulário
+        const dataNascimento = new Date(document.getElementById("dataNascimento").value);
+        const nome = document.getElementById("nome").value;
+        const altura = parseFloat(document.getElementById("altura").value);
+        const desejaServir = document.querySelector('input[name="desejaServir"]:checked') ? document.querySelector('input[name="desejaServir"]:checked').value : null;
+
+        // Verificar a idade
+        const idade = new Date().getFullYear() - dataNascimento.getFullYear();
+        if (new Date().getMonth() < dataNascimento.getMonth()) {
+            idade--; // Ajuste se ainda não passou o aniversário no ano
+        }
+
+        // Validações
+        let valid = true;
+
+        if (!dataNascimento || isNaN(idade) || idade < 18) {
+            document.getElementById("errorNascimento").innerText = 'Você deve ter 18 anos ou mais para se alistar.';
+            valid = false;
+        }
+
+        if (nome.trim() === '') {
+            document.getElementById("errorNome").innerText = 'Nome completo é obrigatório.';
+            valid = false;
+        }
+
+        if (isNaN(altura) || altura <= 0) {
+            document.getElementById("errorAltura").innerText = 'Altura inválida. Digite um valor positivo.';
+            valid = false;
+        }
+
+        if (!desejaServir) {
+            document.getElementById("errorServir").innerText = 'Você precisa informar se deseja servir.';
+            valid = false;
+        }
+
+        // Se os dados estiverem válidos, mostrar o resultado
+        if (valid) {
+            let mensagem = `Nome: ${nome}<br>Idade: ${idade} anos<br>Altura: ${altura} metros<br>`;
+            if (desejaServir === 'sim') {
+                mensagem += 'Você foi alistado com sucesso!';
+            } else {
+                mensagem += 'Você não será alistado.';
+            }
+
+            document.getElementById("mensagemResultado").innerHTML = mensagem;
+            document.getElementById("resultado").style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>
