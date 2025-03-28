@@ -106,26 +106,24 @@
     document.getElementById("formAlistamento").addEventListener("submit", function(event) {
         event.preventDefault();
 
-        // Limpar mensagens de erro
+      
         document.getElementById("errorNascimento").innerText = '';
         document.getElementById("errorNome").innerText = '';
         document.getElementById("errorAltura").innerText = '';
         document.getElementById("errorServir").innerText = '';
         document.getElementById("resultado").style.display = 'none';
 
-        // Coletar dados do formulário
         const dataNascimento = new Date(document.getElementById("dataNascimento").value);
         const nome = document.getElementById("nome").value;
         const altura = parseFloat(document.getElementById("altura").value);
         const desejaServir = document.querySelector('input[name="desejaServir"]:checked') ? document.querySelector('input[name="desejaServir"]:checked').value : null;
 
-        // Verificar a idade
         const idade = new Date().getFullYear() - dataNascimento.getFullYear();
         if (new Date().getMonth() < dataNascimento.getMonth()) {
-            idade--; // Ajuste se ainda não passou o aniversário no ano
+            idade--; 
         }
 
-        // Validações
+       
         let valid = true;
 
         if (!dataNascimento || isNaN(idade) || idade < 18) {
@@ -148,7 +146,7 @@
             valid = false;
         }
 
-        // Se os dados estiverem válidos, mostrar o resultado
+        
         if (valid) {
             let mensagem = `Nome: ${nome}<br>Idade: ${idade} anos<br>Altura: ${altura} metros<br>`;
             if (desejaServir === 'sim') {
